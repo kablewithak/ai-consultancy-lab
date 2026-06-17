@@ -15,12 +15,20 @@ from packages.structured_outputs.contracts import (
     retry_decision_for_failure,
     validation_error_to_envelope,
 )
+from packages.structured_outputs.examples import (
+    ReliabilityRequestRoute,
+    RequestClassification,
+    classify_request_with_rules,
+    parse_classification_model_output,
+)
 
 __all__ = [
     "BaseResult",
     "FailureResult",
     "OutputParseResult",
     "Refusal",
+    "ReliabilityRequestRoute",
+    "RequestClassification",
     "RetryAction",
     "RetryDecision",
     "StrictOutputModel",
@@ -29,6 +37,8 @@ __all__ = [
     "UnsupportedAnswer",
     "ValidationErrorEnvelope",
     "ValidationIssue",
+    "classify_request_with_rules",
+    "parse_classification_model_output",
     "parse_model_output",
     "retry_decision_for_failure",
     "validation_error_to_envelope",
