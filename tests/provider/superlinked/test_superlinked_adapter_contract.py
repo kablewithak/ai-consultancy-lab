@@ -250,12 +250,8 @@ def test_retry_decision_uses_caller_budget_not_hidden_attempts() -> None:
     error = client.encode_text(request())
     assert isinstance(error, InferenceProviderError)
     assert inference_retry_allowed(error, attempt_number=1, max_attempts=2, remaining_seconds=5)
-    assert not inference_retry_allowed(
-        error, attempt_number=2, max_attempts=2, remaining_seconds=5
-    )
-    assert not inference_retry_allowed(
-        error, attempt_number=1, max_attempts=2, remaining_seconds=0
-    )
+    assert not inference_retry_allowed(error, attempt_number=2, max_attempts=2, remaining_seconds=5)
+    assert not inference_retry_allowed(error, attempt_number=1, max_attempts=2, remaining_seconds=0)
     with pytest.raises(ValueError):
         inference_retry_allowed(error, attempt_number=0, max_attempts=2, remaining_seconds=5)
     with pytest.raises(ValueError):
