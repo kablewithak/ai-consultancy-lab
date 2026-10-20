@@ -11,7 +11,6 @@ dependencies = [
     "pydantic>=2.7",
     "pydantic-settings>=2.3",
     "python-dotenv>=1.0",
-    "sie-sdk",
 ]
 
 [project.optional-dependencies]
@@ -19,12 +18,16 @@ dev = [
     "pytest>=8.0",
     "ruff>=0.5",
 ]
+superlinked = [
+    "sie-sdk==0.6.4",
+]
 
 [tool.setuptools.packages.find]
 include = ["packages*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+# Provider-specific tests are opt-in and must be run explicitly with the optional extra.
+testpaths = ["tests/unit"]
 pythonpath = ["."]
 
 [tool.ruff]

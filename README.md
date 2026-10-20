@@ -4,11 +4,11 @@ Production-shaped AI reliability lab for evaluated, privacy-aware, harness-drive
 
 ## Current Slice
 
-Week 2 adds the structured-output foundation for deterministic model-output boundaries.
+S03 introduces explicit provider selection, an SDK-optional core installation,
+provider-independent deterministic tests, and an opt-in local SIE smoke route.
 
-Week 1 added the first provider-backed inference boundary using Superlinked.
-
-Superlinked is used as the first external inference provider, but the architecture remains provider-neutral.
+S02 added validated numerical embedding vectors and more precise provider errors.
+Earlier work established the structured-output foundation and the first Superlinked adapter.
 
 ```text
 Superlinked is the first provider adapter.
@@ -17,42 +17,36 @@ Superlinked is not the architecture.
 
 ## Maturity Label
 
-production-shaped provider integration and structured-output scaffold, locally unit-tested, not RAG-ready, not customer-data tested, not production-ready
+Production-shaped inference and structured-output contracts, with provider-neutral
+core development. Local S03 and real-backend qualification must be assessed from
+fresh evidence. Not RAG-ready, customer-data qualified, or production-ready.
 
 ## Setup
 
-Run from the repo root:
+Run from the repository root in PowerShell. Ordinary core tests require neither `sie-sdk` nor a provider endpoint, credentials or hosted credits.
 
 ```powershell
-Set-Location "C:\Users\kabom\Documents\Machine Learning\Machine Learning Workspace\ai-consultancy-lab"
-.\.venv\Scripts\Activate.ps1
-pip install -e ".[dev]"
-Copy-Item .env.example .env
-notepad .env
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+.\.venv\Scripts\python.exe -m pytest -q
 ```
 
-Fill in the `.env` file:
+The application selects `InferenceBackend.DISABLED` or `InferenceBackend.SUPERLINKED` explicitly; tests inject a scripted fake at the `InferenceClient` protocol. The disabled mode returns a configuration error rather than fake output.
 
-```text
-SIE_BASE_URL=https://replace-with-your-superlinked-sie-endpoint
-SIE_API_KEY=replace-with-your-real-api-key
-SIE_EMBEDDING_MODEL=BAAI/bge-m3
-SIE_TIMEOUT_S=60
-```
-
-For local Docker SIE validation, `SIE_API_KEY` may be blank if the local SIE server does not require a key.
-
-Run tests:
+To install and test the **optional** Superlinked provider adapter:
 
 ```powershell
-python -m pytest
+.\.venv\Scripts\python.exe -m pip install -e ".[dev,superlinked]"
+.\.venv\Scripts\python.exe -m pytest -q tests/provider/superlinked
+.\.venv\Scripts\python.exe scripts/preflight_s02_sdk.py
 ```
 
-Run the Superlinked smoke test:
+For an already running local SIE service, run the **loopback-only/no-key** S03 probe explicitly:
 
 ```powershell
-python scripts\smoke_superlinked.py
+.\.venv\Scripts\python.exe scripts/smoke_s03_local.py --base-url http://127.0.0.1:8081 --model sentence-transformers/all-MiniLM-L6-v2
 ```
+
+The historical `scripts/smoke_superlinked.py` uses `SIE_BASE_URL`, `SIE_API_KEY`, `SIE_EMBEDDING_MODEL` and `SIE_TIMEOUT_S` from `.env`; it is not an offline test. Never put secrets in Git. See `docs/runbooks/s03-credit-independent-inference.md` for the clean-core and live qualification procedures.
 
 ## Security Rules
 
