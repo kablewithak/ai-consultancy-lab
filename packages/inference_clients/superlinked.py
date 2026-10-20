@@ -38,10 +38,14 @@ class SuperlinkedInferenceClient:
 
     def __init__(self, settings: SuperlinkedSettings, sdk_client: Any | None = None) -> None:
         self._settings = settings
-        self._client = sdk_client if sdk_client is not None else SIEClient(
-            settings.sie_base_url,
-            timeout_s=settings.sie_timeout_s,
-            api_key=settings.api_key_value,
+        self._client = (
+            sdk_client
+            if sdk_client is not None
+            else SIEClient(
+                settings.sie_base_url,
+                timeout_s=settings.sie_timeout_s,
+                api_key=settings.api_key_value,
+            )
         )
 
     def encode_text(self, request: EmbeddingRequest) -> EmbeddingCallResult:

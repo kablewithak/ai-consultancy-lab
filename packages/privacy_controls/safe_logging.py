@@ -22,18 +22,18 @@ def is_sensitive_key(key: str) -> bool:
 
 
 def redact_value(value: Any) -> str:
+    """Never preserve any prefix or suffix of a credential in operational logs."""
+
     if value is None:
         return ""
-    text = str(value)
-    if len(text) <= 8:
-        return "***"
-    return f"{text[:3]}***{text[-3:]}"
+    return "***"
 
 
 def redact_mapping(data: Mapping[str, Any]) -> dict[str, Any]:
-    """Return a copy of a mapping with sensitive values redacted.
+    """Return a copy of a mapping with sensitive values fully redacted.
 
-    This intentionally does not mutate the original input.
+    This intentionally does not mutate the original input. Callers must not
+    add arbitrary raw texts, prompts or vectors as values under safe-looking keys.
     """
 
     redacted: dict[str, Any] = {}
