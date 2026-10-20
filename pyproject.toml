@@ -6,7 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "ai-consultancy-lab"
 version = "0.1.0"
 description = "Production-shaped AI reliability lab for evaluated, privacy-aware inference, RAG, and agent systems."
-requires-python = ">=3.12"
+# S04 qualifies CPython 3.12 only. Expand the declared range after a tested matrix.
+requires-python = ">=3.12,<3.13"
 dependencies = [
     "pydantic>=2.7",
     "pydantic-settings>=2.3",
@@ -15,8 +16,10 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=8.0",
-    "ruff>=0.5",
+    # Pin the direct verifier tools; transitive dependencies are not yet locked.
+    "pytest==9.0.3",
+    "ruff==0.15.17",
+    "mypy==1.18.2",
 ]
 superlinked = [
     "sie-sdk==0.6.4",
@@ -26,10 +29,36 @@ superlinked = [
 include = ["packages*"]
 
 [tool.pytest.ini_options]
-# Provider-specific tests are opt-in and must be run explicitly with the optional extra.
+# Explicitly exclude provider integration tests from the default no-network run.
 testpaths = ["tests/unit"]
 pythonpath = ["."]
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py312"
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+python_version = "3.12"
+show_error_codes = true
+warn_unused_ignores = true
+check_untyped_defs = true
+no_implicit_optional = true
+# Only the selected application boundaries are gated initially. The optional
+# Superlinked adapter and test modules are not silently counted as typed.
+files = [
+    "packages/inference_clients/base.py",
+    "packages/inference_clients/factory.py",
+    "packages/config/settings.py",
+    "packages/privacy_controls/safe_logging.py",
+    "packages/trace_logging/logger.py",
+    "packages/structured_outputs/contracts.py",
+    "packages/structured_outputs/examples.py",
+]
+
+# The SDK adapter is a separate optional/provider-only qualification surface.
+# Skip following this imported module during the SDK-free focused core gate.
+# Its mock-contract suite remains mandatory in a provider-enabled environment.
+[[tool.mypy.overrides]]
+module = ["packages.inference_clients.superlinked"]
+follow_imports = "skip"
