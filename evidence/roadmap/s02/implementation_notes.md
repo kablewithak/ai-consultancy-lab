@@ -1,8 +1,8 @@
 # S02 — Embedding vector contract and Superlinked error boundary
 
-**Date:** 2026-10-20  
-**Roadmap:** P1/S02 → contributes to G1  
-**Base commit:** `3631ab01feabb6fc0246e95a364b5a9c64f292c8`  
+**Date:** 2026-10-20
+**Roadmap:** P1/S02 → contributes to G1
+**Base commit:** `3631ab01feabb6fc0246e95a364b5a9c64f292c8`
 **Disposition:** IMPLEMENTATION CANDIDATE — **NOT VALIDATED ON THE USER'S SDK OR LOCAL CHECKOUT**.
 
 ## Scope and intent
